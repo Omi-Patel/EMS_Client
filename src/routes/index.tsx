@@ -8,6 +8,7 @@ import FeaturesSection from "@/components/Landing-Page/features-section";
 import TestimonialsSection from "@/components/Landing-Page/testimonials-section";
 import CtaSection from "@/components/Landing-Page/cta-section";
 import Footer from "@/components/Landing-Page/footer";
+import Header from "@/components/Landing-Page/Header";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/")({
 function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <Header />
       <HeroSection />
       <StatsSection />
       <FeaturesSection />

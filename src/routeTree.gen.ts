@@ -11,12 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AppRouteImport } from './routes/app/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
+import { Route as AppServicesIndexImport } from './routes/app/services/index'
 import { Route as AppAdminPortalIndexImport } from './routes/app/admin-portal/index'
+import { Route as AppServicesCreateImport } from './routes/app/services/create'
+import { Route as AppServicesServiceIdImport } from './routes/app/services/$serviceId'
+import { Route as AppServicesEditServiceIdImport } from './routes/app/services/edit/$serviceId'
 
 // Create/Update Routes
+
+const AppRouteRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -36,10 +47,34 @@ const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AppServicesIndexRoute = AppServicesIndexImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
 const AppAdminPortalIndexRoute = AppAdminPortalIndexImport.update({
-  id: '/app/admin-portal/',
-  path: '/app/admin-portal/',
-  getParentRoute: () => rootRoute,
+  id: '/admin-portal/',
+  path: '/admin-portal/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppServicesCreateRoute = AppServicesCreateImport.update({
+  id: '/services/create',
+  path: '/services/create',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppServicesServiceIdRoute = AppServicesServiceIdImport.update({
+  id: '/services/$serviceId',
+  path: '/services/$serviceId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppServicesEditServiceIdRoute = AppServicesEditServiceIdImport.update({
+  id: '/services/edit/$serviceId',
+  path: '/services/edit/$serviceId',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -53,12 +88,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/app/services/$serviceId': {
+      id: '/app/services/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/app/services/$serviceId'
+      preLoaderRoute: typeof AppServicesServiceIdImport
+      parentRoute: typeof AppRouteImport
+    }
+    '/app/services/create': {
+      id: '/app/services/create'
+      path: '/services/create'
+      fullPath: '/app/services/create'
+      preLoaderRoute: typeof AppServicesCreateImport
+      parentRoute: typeof AppRouteImport
+    }
     '/app/admin-portal/': {
       id: '/app/admin-portal/'
-      path: '/app/admin-portal'
+      path: '/admin-portal'
       fullPath: '/app/admin-portal'
       preLoaderRoute: typeof AppAdminPortalIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppRouteImport
+    }
+    '/app/services/': {
+      id: '/app/services/'
+      path: '/services'
+      fullPath: '/app/services'
+      preLoaderRoute: typeof AppServicesIndexImport
+      parentRoute: typeof AppRouteImport
     }
     '/auth/login/': {
       id: '/auth/login/'
@@ -74,57 +137,122 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterIndexImport
       parentRoute: typeof rootRoute
     }
+    '/app/services/edit/$serviceId': {
+      id: '/app/services/edit/$serviceId'
+      path: '/services/edit/$serviceId'
+      fullPath: '/app/services/edit/$serviceId'
+      preLoaderRoute: typeof AppServicesEditServiceIdImport
+      parentRoute: typeof AppRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AppRouteRouteChildren {
+  AppServicesServiceIdRoute: typeof AppServicesServiceIdRoute
+  AppServicesCreateRoute: typeof AppServicesCreateRoute
+  AppAdminPortalIndexRoute: typeof AppAdminPortalIndexRoute
+  AppServicesIndexRoute: typeof AppServicesIndexRoute
+  AppServicesEditServiceIdRoute: typeof AppServicesEditServiceIdRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppServicesServiceIdRoute: AppServicesServiceIdRoute,
+  AppServicesCreateRoute: AppServicesCreateRoute,
+  AppAdminPortalIndexRoute: AppAdminPortalIndexRoute,
+  AppServicesIndexRoute: AppServicesIndexRoute,
+  AppServicesEditServiceIdRoute: AppServicesEditServiceIdRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
+  '/app/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/app/services/create': typeof AppServicesCreateRoute
   '/app/admin-portal': typeof AppAdminPortalIndexRoute
+  '/app/services': typeof AppServicesIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
+  '/app/services/edit/$serviceId': typeof AppServicesEditServiceIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
+  '/app/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/app/services/create': typeof AppServicesCreateRoute
   '/app/admin-portal': typeof AppAdminPortalIndexRoute
+  '/app/services': typeof AppServicesIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
+  '/app/services/edit/$serviceId': typeof AppServicesEditServiceIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
+  '/app/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/app/services/create': typeof AppServicesCreateRoute
   '/app/admin-portal/': typeof AppAdminPortalIndexRoute
+  '/app/services/': typeof AppServicesIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
+  '/app/services/edit/$serviceId': typeof AppServicesEditServiceIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app/admin-portal' | '/auth/login' | '/auth/register'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/services/$serviceId'
+    | '/app/services/create'
+    | '/app/admin-portal'
+    | '/app/services'
+    | '/auth/login'
+    | '/auth/register'
+    | '/app/services/edit/$serviceId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/admin-portal' | '/auth/login' | '/auth/register'
+  to:
+    | '/'
+    | '/app'
+    | '/app/services/$serviceId'
+    | '/app/services/create'
+    | '/app/admin-portal'
+    | '/app/services'
+    | '/auth/login'
+    | '/auth/register'
+    | '/app/services/edit/$serviceId'
   id:
     | '__root__'
     | '/'
+    | '/app'
+    | '/app/services/$serviceId'
+    | '/app/services/create'
     | '/app/admin-portal/'
+    | '/app/services/'
     | '/auth/login/'
     | '/auth/register/'
+    | '/app/services/edit/$serviceId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppAdminPortalIndexRoute: typeof AppAdminPortalIndexRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppAdminPortalIndexRoute: AppAdminPortalIndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
 }
@@ -140,7 +268,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/app/admin-portal/",
+        "/app",
         "/auth/login/",
         "/auth/register/"
       ]
@@ -148,14 +276,41 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
+    "/app": {
+      "filePath": "app/route.tsx",
+      "children": [
+        "/app/services/$serviceId",
+        "/app/services/create",
+        "/app/admin-portal/",
+        "/app/services/",
+        "/app/services/edit/$serviceId"
+      ]
+    },
+    "/app/services/$serviceId": {
+      "filePath": "app/services/$serviceId.tsx",
+      "parent": "/app"
+    },
+    "/app/services/create": {
+      "filePath": "app/services/create.tsx",
+      "parent": "/app"
+    },
     "/app/admin-portal/": {
-      "filePath": "app/admin-portal/index.tsx"
+      "filePath": "app/admin-portal/index.tsx",
+      "parent": "/app"
+    },
+    "/app/services/": {
+      "filePath": "app/services/index.tsx",
+      "parent": "/app"
     },
     "/auth/login/": {
       "filePath": "auth/login/index.tsx"
     },
     "/auth/register/": {
       "filePath": "auth/register/index.tsx"
+    },
+    "/app/services/edit/$serviceId": {
+      "filePath": "app/services/edit/$serviceId.tsx",
+      "parent": "/app"
     }
   }
 }

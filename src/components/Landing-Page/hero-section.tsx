@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "./Header";
 
 export default function HeroSection() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,7 +22,6 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen overflow-hidden pt-32 pb-20 md:pt-36 md:pb-32 bg-background">
-      <Header />
 
       {/* Background Pattern */}
 

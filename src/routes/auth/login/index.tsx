@@ -19,7 +19,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { loginUser } from "@/lib/action";
+import { loginUser } from "@/lib/actions";
 import type { LoginInput, UserResponse } from "@/schema/user-schema";
 import { toast } from "sonner";
 import { getUser, isAdmin } from "@/lib/auth";
@@ -64,12 +64,7 @@ function RouteComponent() {
 
       toast.success("Login successful!");
 
-      // check role
-      if (isAdmin()) {
-        navigate({ to: "/app/admin-portal" });
-      } else {
-        navigate({ to: "/" });
-      }
+      navigate({ to: "/" });
     },
     onError: (error) => {
       setError(error.message);

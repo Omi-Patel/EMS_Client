@@ -30,7 +30,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 
-import { createUser } from "@/lib/action";
+import { createUser } from "@/lib/actions";
 import type { UserRegistration, UserResponse } from "@/schema/user-schema";
 import { userRegistrationSchema } from "@/schema/user-schema";
 import { getUser } from "@/lib/auth";
