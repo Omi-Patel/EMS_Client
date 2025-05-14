@@ -58,7 +58,7 @@ export async function loginUser(loginInput: LoginInput): Promise<UserResponse> {
 // services actions
 
 export async function createService(
-  serviceInput: ServiceRegistration
+  serviceInput: ServiceRegistration | FormData
 ): Promise<ServiceResponse> {
   try {
     const token = getToken();
@@ -67,8 +67,10 @@ export async function createService(
       serviceInput,
       {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          ...(serviceInput instanceof FormData
+            ? {}
+            : { "Content-Type": "application/json" }),
         },
       }
     );
@@ -102,7 +104,7 @@ export async function getServiceById(id: string): Promise<ServiceResponse> {
 
 export async function updateService(
   id: string,
-  serviceInput: ServiceRegistration
+  serviceInput: ServiceRegistration | FormData
 ): Promise<ServiceResponse> {
   try {
     const token = getToken();
@@ -111,8 +113,10 @@ export async function updateService(
       serviceInput,
       {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          ...(serviceInput instanceof FormData
+            ? {}
+            : { "Content-Type": "application/json" }),
         },
       }
     );

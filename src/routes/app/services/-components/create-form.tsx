@@ -123,7 +123,7 @@ export function ServiceForm({ service }: ServiceFormProps) {
   }, [form.watch("imageUrl")]);
 
   const createMutation = useMutation({
-    mutationFn: createService,
+    mutationFn: (data: FormData) => createService(data),
     onSuccess: () => {
       toast.success("Service created successfully", {
         description: `${form.getValues().name} has been added to your services.`,
@@ -142,7 +142,7 @@ export function ServiceForm({ service }: ServiceFormProps) {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ServiceRegistration }) =>
+    mutationFn: ({ id, data }: { id: string; data: FormData }) =>
       updateService(id, data),
     onSuccess: () => {
       toast.success("Service updated successfully", {
@@ -171,21 +171,36 @@ export function ServiceForm({ service }: ServiceFormProps) {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        form.setValue("imageUrl", base64String);
-        setImagePreview(base64String);
-      };
-      reader.readAsDataURL(file);
+      // Create a preview URL for the image
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      
+      // Store the file in form data
+      form.setValue("imageFile", file);
     }
   };
 
   async function onSubmit(data: ServiceRegistration) {
-    if (service) {
-      updateMutation.mutate({ id: service._id, data });
-    } else {
-      createMutation.mutate(data);
+    try {
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      
+      // Append all form fields
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === 'imageFile' && value instanceof File) {
+          formData.append('image', value);
+        } else {
+          formData.append(key, value as string);
+        }
+      });
+
+      if (service) {
+        await updateMutation.mutateAsync({ id: service._id, data: formData });
+      } else {
+        await createMutation.mutateAsync(formData);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
   }
 

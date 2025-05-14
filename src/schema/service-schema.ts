@@ -19,6 +19,7 @@ export const serviceSchema = z.object({
     required_error: "Please provide service category",
   }),
   imageUrl: z.string().optional(),
+  imageFile: z.instanceof(File).optional(),
 });
 
 export type ServiceRegistration = z.infer<typeof serviceSchema>;
